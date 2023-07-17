@@ -17,10 +17,7 @@ class I3D(nn.Module):
                  pooling_method='max'):
         super(I3D, self).__init__()
         self.pooling_method = pooling_method.lower()
-        if self.pooling_method == 'avg':
-            self.pooling_functor = F.avg_pool3d
-        else:
-            self.pooling_functor = F.max_pool3d
+        self.pooling_functor = F.max_pool3d
         self.without_t_stride = without_t_stride
         self.t_s = 1 if without_t_stride else 2
         self.conv1 = BasicConv3d(3, 64, kernel_size=(7, 7, 7), stride=(1, 2, 2), padding=(3, 3, 3))
