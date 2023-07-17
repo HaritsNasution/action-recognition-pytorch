@@ -66,21 +66,21 @@ class I3D(nn.Module):
         # N x 3 x F x 224 x 224
         x = self.conv1(x)
         # N x 64 x F x 112 x 112
-        x = self.pooling_functor(x, kernel_size=(1, 3, 3), stride=(1, 2, 2), padding=(0, 1, 1))
+        x = F.maxpool3d(x, kernel_size=(1, 3, 3), stride=(1, 2, 2), padding=(0, 1, 1))
         # N x 64 x F x 56 x 56
         x = self.conv2(x)
         # N x 64 x F x 56 x 56
         x = self.conv3(x)
         # N x 192 x F x 56 x 56
         # difference from the original I3D , which does temporal downsampling in the first conv
-        x = self.pooling_functor(x, kernel_size=(3, 3, 3), stride=(self.t_s, 2, 2),
+        x = F.maxpool3d(x, kernel_size=(3, 3, 3), stride=(self.t_s, 2, 2),
                                  padding=(1, 1, 1))
         # N x 192 x (F/2) x 28 x 28
         x = self.inception3a(x)
         # N x 256 x (F/2) x 28 x 28
         x = self.inception3b(x)
         # N x 480 x (F/2) x 28 x 28
-        x = self.pooling_functor(x, kernel_size=(3, 3, 3), stride=(self.t_s, 2, 2),
+        x = F.maxpool3d(x, kernel_size=(3, 3, 3), stride=(self.t_s, 2, 2),
                                  padding=(1, 1, 1))
         # N x 480 x (F/4) x 14 x 14
         x = self.inception4a(x)
@@ -93,7 +93,7 @@ class I3D(nn.Module):
         # N x 528 x (F/4) x 14 x 14
         x = self.inception4e(x)
         # N x 832 x (F/4) x 14 x 14
-        x = self.pooling_functor(x, kernel_size=(3, 3, 3), stride=(self.t_s, 2, 2),
+        x = F.maxpool3d(x, kernel_size=(3, 3, 3), stride=(self.t_s, 2, 2),
                                  padding=(1, 1, 1))
         # N x 832 x (F/8) x 7 x 7
         x = self.inception5a(x)
